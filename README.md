@@ -85,6 +85,21 @@ The licenses on choosealicense.com are regularly imported to GitHub.com to be us
 
 The license properties (rules) are stored as a bulleted list within the licenses YAML front matter. Each rule has a name e.g., `include-copyright`, a human-readable label, e.g., `Copyright inclusion`, and a description `Include the original copyright with the code`. To add a new rule, simply add it to `_data/rules.yml` and reference it in the appropriate license.
 
+## License formats
+
+Each license on the site is available in multiple formats for easy integration into your projects:
+
+* **Plain Text (.txt)** - Raw license text without formatting, suitable for LICENSE files
+* **Markdown (.md)** - Formatted version with sections and metadata, great for documentation
+* **JSON (.json)** - Structured data including all metadata and license text, perfect for programmatic access
+
+The format files are automatically generated during the Jekyll build process and are available at:
+* `/licenses/{license-id}/index.txt`
+* `/licenses/{license-id}/index.md`
+* `/licenses/{license-id}/index.json`
+
+Download links for all formats are provided in the sidebar of each license page.
+
 ### Rules
 
 #### Permissions
