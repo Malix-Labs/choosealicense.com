@@ -99,8 +99,6 @@ module Jekyll
       content
     end
     
-    public
-    
     def output
       self.content
     end
@@ -121,7 +119,6 @@ module Jekyll
         'title' => license.data['title'],
         'spdx-id' => license.data['spdx-id'],
         'description' => license.data['description'],
-        'how' => license.data['how'],
         'permissions' => license.data['permissions'],
         'conditions' => license.data['conditions'],
         'limitations' => license.data['limitations'],
@@ -129,6 +126,7 @@ module Jekyll
       }
       
       # Add optional fields if present
+      json_data['how'] = license.data['how'] if license.data['how']
       json_data['nickname'] = license.data['nickname'] if license.data['nickname']
       json_data['note'] = license.data['note'] if license.data['note']
       json_data['using'] = license.data['using'] if license.data['using']
