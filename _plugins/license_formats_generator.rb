@@ -13,8 +13,8 @@ module Jekyll
       licenses = site.collections['licenses'].docs
 
       licenses.each do |license|
-        # Add spdx-lcase to license data
-        spdx_lcase = File.basename(license.basename, '.txt')
+        # Add spdx-lcase to license data (derived from spdx-id)
+        spdx_lcase = license.data['spdx-id'].downcase
         license.data['spdx-lcase'] = spdx_lcase
         
         # Generate markdown version
@@ -57,6 +57,12 @@ module Jekyll
       self.data = {}
       
       # Build markdown content
+      self.content = build_markdown_content(license)
+    end
+    
+    private
+    
+    def build_markdown_content(license)
       content = "# #{license.data['title']}\n\n"
       
       if license.data['nickname']
@@ -85,11 +91,15 @@ module Jekyll
       end
       content += "\n"
       
-      content += "## How to Apply\n\n"
-      content += "#{license.data['how']}\n"
+      if license.data['how']
+        content += "## How to Apply\n\n"
+        content += "#{license.data['how']}\n"
+      end
       
-      self.content = content
+      content
     end
+    
+    public
     
     def output
       self.content
