@@ -31,7 +31,7 @@ module Jekyll
     private
 
     def generate_markdown_page(site, license)
-      markdown_page = LicenseFormatPage.new(site, license, 'md')
+      markdown_page = LicenseMarkdownPage.new(site, license)
       site.pages << markdown_page
     end
 
@@ -46,20 +46,53 @@ module Jekyll
     end
   end
 
-  class LicenseFormatPage < Page
-    def initialize(site, license, format)
+  class LicenseMarkdownPage < Page
+    def initialize(site, license)
       @site = site
       @base = site.source
       @dir = File.join('licenses', license.data['spdx-lcase'])
-      @name = "index.#{format}"
+      @name = 'index.md'
 
       self.process(@name)
-      self.read_yaml(File.join(@base, '_layouts'), 'license-format.md')
+      self.data = {}
       
-      # Copy all license data
-      self.data.merge!(license.data)
-      self.data['layout'] = 'none'
-      self.content = license.content
+      # Build markdown content
+      content = "# #{license.data['title']}\n\n"
+      
+      if license.data['nickname']
+        content += "**#{license.data['nickname']}**\n\n"
+      end
+      
+      content += "#{license.data['description']}\n\n"
+      content += "## License Text\n\n"
+      content += "```\n#{license.content}```\n\n"
+      
+      content += "## Permissions\n\n"
+      license.data['permissions'].each do |permission|
+        content += "- #{permission}\n"
+      end
+      content += "\n"
+      
+      content += "## Conditions\n\n"
+      license.data['conditions'].each do |condition|
+        content += "- #{condition}\n"
+      end
+      content += "\n"
+      
+      content += "## Limitations\n\n"
+      license.data['limitations'].each do |limitation|
+        content += "- #{limitation}\n"
+      end
+      content += "\n"
+      
+      content += "## How to Apply\n\n"
+      content += "#{license.data['how']}\n"
+      
+      self.content = content
+    end
+    
+    def output
+      self.content
     end
   end
 
@@ -71,6 +104,7 @@ module Jekyll
       @name = 'index.json'
 
       self.process(@name)
+      self.data = {}
       
       # Create JSON structure
       json_data = {
@@ -88,11 +122,10 @@ module Jekyll
       json_data['nickname'] = license.data['nickname'] if license.data['nickname']
       json_data['note'] = license.data['note'] if license.data['note']
       json_data['using'] = license.data['using'] if license.data['using']
-      json_data['featured'] = license.data['featured'] if license.data['featured']
-      json_data['hidden'] = license.data['hidden'] if license.data['hidden']
+      json_data['featured'] = license.data['featured'] if license.data.key?('featured')
+      json_data['hidden'] = license.data['hidden'] if license.data.key?('hidden')
       
       self.content = JSON.pretty_generate(json_data)
-      self.data = { 'layout' => 'none' }
     end
     
     def output
@@ -108,10 +141,10 @@ module Jekyll
       @name = 'index.txt'
 
       self.process(@name)
+      self.data = {}
       
       # Just the plain license text
       self.content = license.content
-      self.data = { 'layout' => 'none' }
     end
     
     def output
