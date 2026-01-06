@@ -1,6 +1,16 @@
 <div class="sidebar">
 
   <a href="#" data-clipboard-target="#license-text" data-proofer-ignore="true" class="js-clipboard-button button">Copy license text to clipboard</a>
+  
+  <div class="download-formats">
+    <h3 id="download-formats">Download in other formats</h3>
+    <ul>
+      <li><a href="/licenses/{{ page.spdx-lcase }}/index.txt" download>Plain Text (.txt)</a></li>
+      <li><a href="/licenses/{{ page.spdx-lcase }}/index.md" download>Markdown (.md)</a></li>
+      <li><a href="/licenses/{{ page.spdx-lcase }}/index.json" download>JSON (.json)</a></li>
+    </ul>
+  </div>
+  
   {% unless page.spdx-id == 'LGPL-3.0' %}
   <h3 id="suggest-this-license">Suggest this license</h3>
   <div class="repository-suggestion">
